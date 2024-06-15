@@ -1,4 +1,9 @@
 import streamlit as st
+import requests
+from PIL import Image
+import os
+
+st.set_page_config(page_title="Homepage", layout="wide")
 
 # CSS를 사용하여 Streamlit 요소 숨기기
 hide_streamlit_style = """
@@ -6,6 +11,8 @@ hide_streamlit_style = """
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             header {visibility: hidden;}
+            .viewerBadge_container__1QSob {visibility: hidden;}
+            .stApp {top: 0;}
             </style>
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
