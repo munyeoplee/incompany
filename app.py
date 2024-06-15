@@ -1,12 +1,36 @@
 import streamlit as st
+import requests
 from PIL import Image
 import os
 
 st.set_page_config(page_title="Homepage", layout="wide")
 
 def main():
-    st.sidebar.title("메뉴")
-    app_mode = st.sidebar.selectbox("모드 선택", ["메인 페이지", "게시판", "설문조사", "VoE", "관리자모드", "게스트모드"])
+    st.title("홈페이지")
+    
+    query_params = st.experimental_get_query_params()
+    mode = query_params.get("mode", ["guest"])[0]
+    
+    if mode == "admin":
+        st.session_state["is_admin"] = True
+    else:
+        st.session_state["is_admin"] = False
+    
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        st.sidebar.title("메뉴")
+        app_mode = st.sidebar.selectbox("모드 선택", ["메인 페이지", "게시판", "설문조사", "VoE"])
+    with col2:
+        if st.session_state["is_admin"]:
+            if st.button("게스트 모드"):
+                st.experimental_set_query_params(mode="guest")
+                st.experimental_rerun()
+            st.write("관리자 모드")
+        else:
+            if st.button("관리자 모드"):
+                st.experimental_set_query_params(mode="admin")
+                st.experimental_rerun()
+            st.write("게스트 모드")
     
     if app_mode == "메인 페이지":
         show_main_page()
@@ -16,20 +40,14 @@ def main():
         show_survey()
     elif app_mode == "VoE":
         show_voe()
-    elif app_mode == "관리자모드":
-        st.session_state["is_admin"] = True
-        st.success("관리자 모드로 전환되었습니다.")
-    elif app_mode == "게스트모드":
-        st.session_state["is_admin"] = False
-        st.success("게스트 모드로 전환되었습니다.")
 
 def show_main_page():
-    st.title("홈페이지 메인 페이지")
+    st.header("메인 페이지")
     st.write("여기에 홈페이지에 대한 설명을 추가하세요.")
 
 def show_board():
-    st.title("게시판")
-    st.write("더블클릭 시 글을 쓸 수 있으며, 그림 파일을 업로드할 수 있습니다.")
+    st.header("게시판")
+    st.write("글을 쓰고 그림 파일을 업로드할 수 있습니다.")
     
     if "posts" not in st.session_state:
         st.session_state["posts"] = []
@@ -58,7 +76,7 @@ def show_board():
             st.image(post["image"])
 
 def show_survey():
-    st.title("설문조사")
+    st.header("설문조사")
     
     if "questions" not in st.session_state:
         st.session_state["questions"] = [{"question": "예시 질문", "response": ""}]
@@ -78,7 +96,7 @@ def show_survey():
             st.session_state["questions"][i]["response"] = response
 
 def show_voe():
-    st.title("VoE")
+    st.header("VoE")
     
     if "voe_comments" not in st.session_state:
         st.session_state["voe_comments"] = []
