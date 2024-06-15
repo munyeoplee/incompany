@@ -1,10 +1,16 @@
 import streamlit as st
-import requests
-from PIL import Image
-import os
 
-st.set_page_config(page_title="Homepage", layout="wide")
+# CSS를 사용하여 Streamlit 요소 숨기기
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
+# 나머지 앱 코드
 def main():
     st.title("홈페이지")
     
